@@ -29,6 +29,6 @@ Evoluzioni futute
 
 Obiettivo del progetto 
 Progetto sviluppato per consolidare competenze su:
-	•	sviluppo backend con Spring Boot
-	•	testing 
-	•	gestione di logiche di business reali 
+	-	sviluppo backend con Spring Boot
+	-	testing 
+	-	gestione di logiche di business reali 
