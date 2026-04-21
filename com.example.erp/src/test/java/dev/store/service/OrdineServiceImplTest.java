@@ -15,23 +15,29 @@ import org.mockito.MockitoAnnotations;
 
 import dev.store.dto.OrdineDTO;
 import dev.store.entity.Cliente;
+import dev.store.entity.Operazione;
 import dev.store.entity.Ordine;
 import dev.store.entity.StatoOrdine;
+import dev.store.exception.ArticoloNonDisponibileException;
+import dev.store.exception.ClienteNotFoundException;
 import dev.store.repository.ClienteRepository;
 import dev.store.repository.OrdineRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
 
 public class OrdineServiceImplTest {
 	@Mock
 	private ClienteRepository clienteRepository;
 	@Mock
 	private OrdineRepository ordineRepository;
+	@Mock
+	private IntegrationService integrationService;
 	private OrdineServiceImpl service;
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		service= new OrdineServiceImpl(ordineRepository,clienteRepository);
+		service= new OrdineServiceImpl(ordineRepository,clienteRepository,integrationService);
 	}
 	
 	
@@ -40,7 +46,7 @@ public class OrdineServiceImplTest {
 	void notThrowWhenTotaleIsValid() {
 		Ordine o= new Ordine();
 		o.setTotale(BigDecimal.ZERO);
-		Exception e=assertThrows( RuntimeException.class, ()-> service.validaOrdine(o));
+		Exception e=assertThrows( ArticoloNonDisponibileException.class, ()-> service.validaOrdine(o));
 	}
 
 	@Test
@@ -66,17 +72,18 @@ public class OrdineServiceImplTest {
 		
 		OrdineDTO result= service.createOrdine(dto, 1L);
 		assertNotNull(result);
-		assertEquals(new BigDecimal("10"), saved.getTotale());
+		assertEquals(new BigDecimal("10"), result.getTotale());
 		verify(clienteRepository).findById(1L);
 		verify(ordineRepository).save(any(Ordine.class));
+		verify(integrationService).salvaEvento(any(),eq( Operazione.CREATE));
 	}
 	@Test
 	
 	void shouldThrowClienteNotFound() {
 		OrdineDTO dto= new OrdineDTO();
 		
-		when(ordineRepository.findById(1L)).thenReturn(Optional.empty());
-		assertThrows(RuntimeException.class, ()-> { service.createOrdine(dto, 1L);
+		when(clienteRepository.findById(1L)).thenReturn(Optional.empty());
+		assertThrows(ClienteNotFoundException.class, ()-> { service.createOrdine(dto, 1L);
 		});
 		verify(clienteRepository).findById(1L);
 		

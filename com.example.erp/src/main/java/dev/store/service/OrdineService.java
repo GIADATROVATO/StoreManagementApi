@@ -10,7 +10,7 @@ import dev.store.entity.StatoOrdine;
 public interface OrdineService {
 	OrdineDTO createOrdine(OrdineDTO o, Long clienteId);
 	List<OrdineDTO> findByStato(StatoOrdine stato);
-	Optional<OrdineDTO> findById(Long id);
+	OrdineDTO findById(Long id);
 	Optional<OrdineDTO> update(OrdineDTO dto , Long id);
 	boolean delete(Long id);
 	

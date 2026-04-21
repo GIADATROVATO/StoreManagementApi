@@ -10,6 +10,7 @@ import dev.store.dto.ClienteDTODetails;
 import dev.store.dto.OrdineDTO;
 import dev.store.entity.Cliente;
 import dev.store.entity.Ordine;
+import dev.store.exception.ClienteNotFoundException;
 import dev.store.repository.ClienteRepository;
 import dev.store.repository.OrdineRepository;
 
@@ -35,12 +36,12 @@ public class ClienteServiceImpl implements ClienteService{
 		return clienteRepo.findById(id).map(this::mapToDto);
 	}
 	public ClienteDTODetails findByDetailsId(Long id) {
-		Cliente c = clienteRepo.findById(id).orElseThrow();
+		Cliente c = clienteRepo.findById(id).orElseThrow(()-> new ClienteNotFoundException("cliente: X"));
 		return mapToDetailsDTO(c);
 		
 	}
 	public ClienteDTO update(Long id, ClienteDTO d) {
-		Cliente c= clienteRepo.findById(id).orElseThrow(()-> new RuntimeException("cliente non trovato"));
+		Cliente c= clienteRepo.findById(id).orElseThrow(()-> new ClienteNotFoundException("cliente non modificabile"));
 		mapToClienteEntity(d,c);
 		Cliente saved= clienteRepo.save(c);
 		return mapToDto(saved);
@@ -70,6 +71,7 @@ public class ClienteServiceImpl implements ClienteService{
 	 * 		clienteID -> numeroOrdini
 	 * 			1			3
 	 * 			2			0
+	 *			3			8 
 	 */
 	
 	/*
@@ -122,7 +124,7 @@ public class ClienteServiceImpl implements ClienteService{
 	public OrdineDTO mapOrdineToDto( Ordine o) {
 		OrdineDTO dto= new OrdineDTO();
 		dto.setTotale(o.getTotale());
-		dto.setStato(o.getStato());
+		dto.setStato(o.getStatoOrdine());
 		return dto;
 	}
 	
