@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToOne;
@@ -16,7 +18,10 @@ public class Ordine {
 	private LocalDateTime dataFine;
 	private LocalDateTime dataSpedizione;
 	private boolean disponibile; 
-	private StatoOrdine stato; //CREATED, PENDING, SHIPPED
+	@Enumerated(EnumType.STRING)
+	private Operazione operazione;
+	@Enumerated(EnumType.STRING)
+	private StatoOrdine stato; //DELETED, CREATED, PENDING, SHIPPED, COMPLETED
 	private BigDecimal totale;
 	@ManyToOne
 	private Cliente cliente;
@@ -59,10 +64,10 @@ public class Ordine {
 	public void setDisponibile(boolean disponibile) {
 		this.disponibile = disponibile;
 	}
-	public StatoOrdine getStato() {
+	public StatoOrdine getStatoOrdine() {
 		return stato;
 	}
-	public void setStato(StatoOrdine stato) {
+	public void setStatoOrdine(StatoOrdine stato) {
 		this.stato = stato;
 	}
 	public BigDecimal getTotale() {
@@ -76,6 +81,12 @@ public class Ordine {
 	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	public Operazione getOperazione() {
+		return operazione;
+	}
+	public void setOperazione(Operazione operazione) {
+		this.operazione = operazione;
 	}
 	
 }
