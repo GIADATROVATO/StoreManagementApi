@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-public class OrdineIntegration {
+public class IntegrationEvent {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	private Long id;
+	private Long id;					// ID evento nel db 
+	private Long entityId;				// ID cliente/ordine 
+	private EntityType type;
 	@Enumerated(EnumType.STRING)
 	private StatoIntegration stato;		//PENDING, SENT , FAILED
 	private LocalDateTime createdAt;
@@ -21,7 +23,7 @@ public class OrdineIntegration {
 	@Enumerated(EnumType.STRING)
 	private Operazione operazione;		//CREATE, UPDATE, DELETE
 	private int retryCount;
-	public OrdineIntegration() {}
+	public IntegrationEvent() {}
 	public Long getId() {
 		return id;
 	}
@@ -58,6 +60,18 @@ public class OrdineIntegration {
 	}
 	public void setOperazione(Operazione operazione) {
 		this.operazione = operazione;
+	}
+	public Long getEntityId() {
+		return entityId;
+	}
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
+	}
+	public EntityType getEntityType() {
+		return type;
+	}
+	public void setEntityType(EntityType type) {
+		this.type = type;
 	}
 	
 	
