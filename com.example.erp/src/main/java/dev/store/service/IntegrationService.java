@@ -8,26 +8,40 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.store.entity.Operazione;
 import dev.store.entity.Ordine;
-import dev.store.entity.OrdineIntegration;
+import dev.store.entity.BaseEntity;
+import dev.store.entity.EntityType;
+import dev.store.entity.IntegrationEvent;
 import dev.store.entity.StatoIntegration;
-import dev.store.repository.OrdineIntegrationRepository;
+import dev.store.repository.IntegrationRepository;
 
 @Service
 public class IntegrationService {
 	
-	private final OrdineIntegrationRepository repository;
+	private final IntegrationRepository repository;
 	private final ObjectMapper objectMapper; 
 	
-	public IntegrationService( OrdineIntegrationRepository repository,ObjectMapper objectMapper) {
+	public IntegrationService( IntegrationRepository repository,ObjectMapper objectMapper) {
 		this.repository=repository;
 		this.objectMapper=objectMapper;
 	}
 	
-	public void salvaEvento(Ordine o, Operazione operazione) {
+	private String mapToJson(Object saved) {
 		try {
-			String payload= objectMapper.writeValueAsString(o);
-			OrdineIntegration i= new OrdineIntegration();
-			i.setId(o.getId());
+			return objectMapper.writeValueAsString(saved);
+		}catch(Exception e) {
+			throw new RuntimeException("Errore JSON",e);
+		}
+	}
+	public void salvaEvento(BaseEntity entity, EntityType type, Operazione operazione) {
+		if(entity==null) {
+			throw new IllegalArgumentException("Entity non deve essere null");
+		}
+		
+			String payload= mapToJson(entity);
+			
+			IntegrationEvent i= new IntegrationEvent();
+			i.setEntityId((entity.getId()));
+			i.setEntityType(type);
 			i.setOperazione(operazione);
 			i.setPayload(payload);
 			i.setRetryCount(0);
@@ -35,7 +49,5 @@ public class IntegrationService {
 			i.setStato(StatoIntegration.PENDING);
 			
 			repository.save(i);
-		}catch(Exception e) {};
-			throw new RuntimeException("Errore evento");
 	}
 }

@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import dev.store.dto.OrdineDTO;
 import dev.store.entity.Cliente;
+import dev.store.entity.EntityType;
 import dev.store.entity.Operazione;
 import dev.store.entity.Ordine;
 import dev.store.entity.StatoOrdine;
@@ -75,7 +76,7 @@ public class OrdineServiceImplTest {
 		assertEquals(new BigDecimal("10"), result.getTotale());
 		verify(clienteRepository).findById(1L);
 		verify(ordineRepository).save(any(Ordine.class));
-		verify(integrationService).salvaEvento(any(),eq( Operazione.CREATE));
+		verify(integrationService).salvaEvento(any(),eq(EntityType.ORDINE),eq( Operazione.CREATE));
 	}
 	@Test
 	

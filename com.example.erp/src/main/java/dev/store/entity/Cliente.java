@@ -8,15 +8,17 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 
 @Entity
-public class Cliente {
+public class Cliente implements BaseEntity {
 	@Id 
 	@GeneratedValue
 	private Long id;
 	private String nome; 
 	private String email;
+	private StatoCliente statoCliente;
 	@OneToMany(mappedBy="cliente")
 	private List<Ordine> ordini;
 	public Cliente() {}
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -40,6 +42,12 @@ public class Cliente {
 	}
 	public void setOrdini(List<Ordine> ordini) {
 		this.ordini = ordini;
+	}
+	public StatoCliente getStatoCliente() {
+		return statoCliente;
+	}
+	public void setStatoCliente(StatoCliente statoCliente) {
+		this.statoCliente = statoCliente;
 	}
 
 	

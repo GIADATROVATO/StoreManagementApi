@@ -8,30 +8,30 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import dev.store.entity.OrdineIntegration;
+import dev.store.entity.IntegrationEvent;
 import dev.store.entity.StatoIntegration;
-import dev.store.repository.OrdineIntegrationRepository;
-
+import dev.store.repository.IntegrationRepository;
+/*
 @Service
 public class ErpServiceOrdine {
 	private WebClient webClient;
-	private OrdineIntegrationRepository integrationRepo;
+	private IntegrationRepository integrationRepo;
 	private final Logger logger=LoggerFactory.getLogger(ErpServiceOrdine.class);
 	
-	public ErpServiceOrdine(WebClient.Builder builder, OrdineIntegrationRepository integrationRepo) {
+	public ErpServiceOrdine(WebClient.Builder builder, IntegrationRepository integrationRepo) {
 		this.integrationRepo=integrationRepo;
 		this.webClient=builder.baseUrl("http://localhost:8081").build();
 		
 	}
 	@Scheduled(fixedDelay=5000)
 	public void processPending() {
-		List<OrdineIntegration> lista= integrationRepo.findByStatus("PENDING");
-		for(OrdineIntegration i: lista) {
+		List<IntegrationEvent> lista= integrationRepo.findByStatus(StatoIntegration.PENDING);
+		for(IntegrationEvent i: lista) {
 			processAsync(i);
 		}
 	}
 	@Async
-	public void processAsync(OrdineIntegration i) {
+	public void processAsync(IntegrationEvent i) {
 		try {
 			logger.info("Operazione {} su ordine {}", i.getOperazione(), i.getId());
 			switch(i.getOperazione()) {
@@ -60,5 +60,5 @@ public class ErpServiceOrdine {
 		}
 		integrationRepo.save(i);
 	}
-	
 }
+ */	

@@ -11,21 +11,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import dev.store.dto.OrdineDTO;
 import dev.store.entity.Cliente;
+import dev.store.entity.EntityType;
 import dev.store.entity.Operazione;
 import dev.store.entity.Ordine;
-import dev.store.entity.OrdineIntegration;
-import dev.store.entity.StatoIntegration;
 import dev.store.entity.StatoOrdine;
 import dev.store.exception.ArticoloNonDisponibileException;
 import dev.store.exception.ClienteNotFoundException;
 import dev.store.exception.OrdineNonModificabileException;
 import dev.store.exception.OrdineNotFoundException;
 import dev.store.repository.ClienteRepository;
-import dev.store.repository.OrdineIntegrationRepository;
 import dev.store.repository.OrdineRepository;
 
 
@@ -86,7 +82,7 @@ public class OrdineServiceImpl implements OrdineService{
 		o.setStatoOrdine(StatoOrdine.CREATED);
 		Ordine saved=repository.save(o);
 		
-		integrationService.salvaEvento(saved, Operazione.CREATE);
+		integrationService.salvaEvento(saved,EntityType.ORDINE, Operazione.CREATE);
 
 		
 		return mapToDto(saved);
@@ -103,7 +99,7 @@ public class OrdineServiceImpl implements OrdineService{
 		 */
 		Ordine update= repository.save(o);
 		
-		integrationService.salvaEvento(update, Operazione.UPDATE);
+		integrationService.salvaEvento(update,EntityType.ORDINE, Operazione.UPDATE);
 		
 		return Optional.of(mapToDto(update));
 	}
@@ -114,7 +110,7 @@ public class OrdineServiceImpl implements OrdineService{
 		
 		if(ordine.getStatoOrdine()!=StatoOrdine.CREATED)	{throw new OrdineNonModificabileException("ordine non eliminabile");}
 		
-		integrationService.salvaEvento(ordine, Operazione.DELETE);
+		integrationService.salvaEvento(ordine,EntityType.ORDINE, Operazione.DELETE);
 		ordine.setStatoOrdine(StatoOrdine.DELETED);
 		repository.save(ordine);
 	/*

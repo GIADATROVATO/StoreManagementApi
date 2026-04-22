@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToOne;
 @Entity
-public class Ordine {
+public class Ordine implements BaseEntity{
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -19,9 +19,9 @@ public class Ordine {
 	private LocalDateTime dataSpedizione;
 	private boolean disponibile; 
 	@Enumerated(EnumType.STRING)
-	private Operazione operazione;
+	private Operazione operazione;		//CREATE, UPDATE, DELETE;
 	@Enumerated(EnumType.STRING)
-	private StatoOrdine stato; //DELETED, CREATED, PENDING, SHIPPED, COMPLETED
+	private StatoOrdine stato; 			//DELETED, CREATED, PENDING, SHIPPED, COMPLETED
 	private BigDecimal totale;
 	@ManyToOne
 	private Cliente cliente;
@@ -33,7 +33,7 @@ public class Ordine {
 	 */
 	
 	
-
+	@Override
 	public Long getId() {
 		return id;
 	}
